@@ -15,6 +15,7 @@
         <module>fancymall-order</module>
         <module>fancymall-product</module>
         <module>fancymall-ware</module>
+        <module>renren-fast</module>
     </modules>
 
 </project>
