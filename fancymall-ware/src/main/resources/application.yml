@@ -1,9 +1,17 @@
+server:
+  port: 8085
 spring:
   datasource:
     username: root
     password: mysql
     url: jdbc:mysql://localhost:3306/fancymall_wms
     driver-class-name: com.mysql.cj.jdbc.Driver
+  cloud:
+    nacos:
+        discovery:
+            server-addr: localhost:8848
+  application:
+    name: fancymall_ware
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
