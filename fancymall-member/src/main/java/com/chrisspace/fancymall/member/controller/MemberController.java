@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 
+import com.chrisspace.fancymall.member.feign.CouponFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +31,20 @@ import com.chrisspace.fancymall.common.utils.R;
 public class MemberController {
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    CouponFeignService couponFeignService;
+
+    @RequestMapping("test")
+    public R test(){
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setNickname("CHRIS");
+        // 调用其他服务
+    R membercoupons = couponFeignService.membercoupons();
+
+        return R.ok().put("member",memberEntity).put("coupons",membercoupons.get("coupons"));
+
+    }
 
     /**
      * 列表
