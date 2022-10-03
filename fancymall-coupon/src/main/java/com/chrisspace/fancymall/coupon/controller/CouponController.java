@@ -5,6 +5,8 @@ import com.chrisspace.fancymall.common.utils.R;
 import com.chrisspace.fancymall.coupon.entity.CouponEntity;
 import com.chrisspace.fancymall.coupon.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -19,11 +21,24 @@ import java.util.Map;
  * @email chris@gmail.com
  * @date 2022-09-28 21:04:12
  */
+@RefreshScope
 @RestController
 @RequestMapping("coupon/coupon")
 public class CouponController {
     @Autowired
     private CouponService couponService;
+
+    @Value("${coupon.admin.name}")
+    private String adminName;
+
+    @Value("${coupon.admin.password}")
+    private String adminPassword;
+
+    @RequestMapping("/test/nacos/config")
+    public R config(){
+        String info = adminName + ":" + adminPassword;
+        return R.ok().put("Configs",info);
+    }
 
     /**
      * 返回会员所有优惠券
