@@ -35,7 +35,7 @@ public class MemberPriceController {
      * 列表
      */
     @RequestMapping("/list")
-    // @RequiresPermissions("coupon:memberprice:list")
+    // //@RequiresPermissions("coupon:memberprice:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = memberPriceService.queryPage(params);
 
@@ -47,7 +47,7 @@ public class MemberPriceController {
      * 信息
      */
     @RequestMapping("/info/{id}")
-   // @RequiresPermissions("coupon:memberprice:info")
+   // //@RequiresPermissions("coupon:memberprice:info")
     public R info(@PathVariable("id") Long id){
 		MemberPriceEntity memberPrice = memberPriceService.getById(id);
 
@@ -58,7 +58,7 @@ public class MemberPriceController {
      * 保存
      */
     @RequestMapping("/save")
-    // @RequiresPermissions("coupon:memberprice:save")
+    // //@RequiresPermissions("coupon:memberprice:save")
     public R save(@RequestBody MemberPriceEntity memberPrice){
 		memberPriceService.save(memberPrice);
 
@@ -69,7 +69,7 @@ public class MemberPriceController {
      * 修改
      */
     @RequestMapping("/update")
-    // @RequiresPermissions("coupon:memberprice:update")
+    // //@RequiresPermissions("coupon:memberprice:update")
     public R update(@RequestBody MemberPriceEntity memberPrice){
 		memberPriceService.updateById(memberPrice);
 
@@ -80,7 +80,7 @@ public class MemberPriceController {
      * 删除
      */
     @RequestMapping("/delete")
-    // @RequiresPermissions("coupon:memberprice:delete")
+    // //@RequiresPermissions("coupon:memberprice:delete")
     public R delete(@RequestBody Long[] ids){
 		memberPriceService.removeByIds(Arrays.asList(ids));
 

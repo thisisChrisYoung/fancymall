@@ -35,7 +35,7 @@ public class HomeSubjectSpuController {
      * 列表
      */
     @RequestMapping("/list")
-    // @RequiresPermissions("coupon:homesubjectspu:list")
+    // //@RequiresPermissions("coupon:homesubjectspu:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = homeSubjectSpuService.queryPage(params);
 
@@ -47,7 +47,7 @@ public class HomeSubjectSpuController {
      * 信息
      */
     @RequestMapping("/info/{id}")
-   // @RequiresPermissions("coupon:homesubjectspu:info")
+   // //@RequiresPermissions("coupon:homesubjectspu:info")
     public R info(@PathVariable("id") Long id){
 		HomeSubjectSpuEntity homeSubjectSpu = homeSubjectSpuService.getById(id);
 
@@ -58,7 +58,7 @@ public class HomeSubjectSpuController {
      * 保存
      */
     @RequestMapping("/save")
-    // @RequiresPermissions("coupon:homesubjectspu:save")
+    // //@RequiresPermissions("coupon:homesubjectspu:save")
     public R save(@RequestBody HomeSubjectSpuEntity homeSubjectSpu){
 		homeSubjectSpuService.save(homeSubjectSpu);
 
@@ -69,7 +69,7 @@ public class HomeSubjectSpuController {
      * 修改
      */
     @RequestMapping("/update")
-    // @RequiresPermissions("coupon:homesubjectspu:update")
+    // //@RequiresPermissions("coupon:homesubjectspu:update")
     public R update(@RequestBody HomeSubjectSpuEntity homeSubjectSpu){
 		homeSubjectSpuService.updateById(homeSubjectSpu);
 
@@ -80,7 +80,7 @@ public class HomeSubjectSpuController {
      * 删除
      */
     @RequestMapping("/delete")
-    // @RequiresPermissions("coupon:homesubjectspu:delete")
+    // //@RequiresPermissions("coupon:homesubjectspu:delete")
     public R delete(@RequestBody Long[] ids){
 		homeSubjectSpuService.removeByIds(Arrays.asList(ids));
 

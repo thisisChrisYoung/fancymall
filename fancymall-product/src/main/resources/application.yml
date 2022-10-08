@@ -17,3 +17,8 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto #auto increment
+      logic-delete-value: 1 #全局逻辑删除规则
+      logic-not-delete-value: 0
+logging:
+    level:
+        com.chrisspace.fancymall: debug
