@@ -22,3 +22,5 @@ mybatis-plus:
 logging:
     level:
         com.chrisspace.fancymall: debug
+
+

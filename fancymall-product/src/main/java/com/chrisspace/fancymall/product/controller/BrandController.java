@@ -1,11 +1,16 @@
 package com.chrisspace.fancymall.product.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.chrisspace.fancymall.common.utils.R;
 
+import com.chrisspace.fancymall.common.validator.group.AddGroup;
+import com.chrisspace.fancymall.common.validator.group.UpdateGroup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +22,7 @@ import com.chrisspace.fancymall.product.service.BrandService;
 import com.chrisspace.fancymall.common.utils.PageUtils;
 import com.chrisspace.fancymall.common.utils.R;
 
+import javax.validation.Valid;
 
 
 /**
@@ -60,10 +66,24 @@ public class BrandController {
      */
     @RequestMapping("/save")
     // //@RequiresPermissions("product:brand:save")
-    public R save(@RequestBody BrandEntity brand){
-		brandService.save(brand);
+    public R save(@Validated(AddGroup.class) @RequestBody BrandEntity brand/*, BindingResult result*/){
 
-        return R.ok();
+//        Map<String, String> map = new HashMap<>();
+//        if (result.hasErrors()){
+//
+//            result.getFieldErrors().forEach((item) -> {
+//                String message = item.getDefaultMessage();
+//                String field = item.getField();
+//                map.put(field,message);
+//            });
+//            return R.error(400,"提交数据不合法").put("data", map);
+//        }else {
+
+            brandService.save(brand);
+            return R.ok();
+
+
+
     }
 
     /**
@@ -71,7 +91,7 @@ public class BrandController {
      */
     @RequestMapping("/update")
     // //@RequiresPermissions("product:brand:update")
-    public R update(@RequestBody BrandEntity brand){
+    public R update(@Validated(UpdateGroup.class) @RequestBody BrandEntity brand){
 		brandService.updateById(brand);
 
         return R.ok();
