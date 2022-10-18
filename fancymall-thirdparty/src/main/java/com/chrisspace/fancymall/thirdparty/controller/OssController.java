@@ -28,8 +28,8 @@ public class OssController {
 
         String endpoint = "https://oss-cn-beijing.aliyuncs.com";
         // 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。
-        String accessKeyId = "LTAI5tDR4QQQ3uApCreVCRFR";
-        String accessKeySecret = "C9Kff1vjFamRCd7vpey9N0VnEhefNe";
+        String accessKeyId = "*";
+        String accessKeySecret = "*";
         // 填写Bucket名称，例如examplebucket。
         String bucketName = "fancymall-files";
         // 填写Object完整路径，完整路径中不能包含Bucket名称，例如exampledir/exampleobject.txt。
@@ -38,8 +38,8 @@ public class OssController {
         // 如果未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件流。
         String filePath = "/Users/chris/Downloads/coverPic.jpeg";
 
-        String accessId = "LTAI5tDR4QQQ3uApCreVCRFR";
-        String accessKey = "C9Kff1vjFamRCd7vpey9N0VnEhefNe";
+        String accessId = "*";
+        String accessKey = "*";
         // Endpoint以华东1（杭州）为例，其它Region请按实际情况填写。
         // 填写Bucket名称，例如examplebucket。
         String bucket = "fancymall-files";
