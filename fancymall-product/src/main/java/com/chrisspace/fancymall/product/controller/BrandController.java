@@ -61,6 +61,9 @@ public class BrandController {
         return R.ok().put("brand", brand);
     }
 
+
+
+
     /**
      * 保存
      */
@@ -87,12 +90,12 @@ public class BrandController {
     }
 
     /**
-     * 修改
+     * 修改  冗余数据同步修改
      */
     @RequestMapping("/update")
     // //@RequiresPermissions("product:brand:update")
     public R update(@Validated(UpdateGroup.class) @RequestBody BrandEntity brand){
-		brandService.updateById(brand);
+		brandService.updateDetail(brand);
 
         return R.ok();
     }
@@ -107,5 +110,7 @@ public class BrandController {
 
         return R.ok();
     }
+
+
 
 }

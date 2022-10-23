@@ -1,8 +1,12 @@
 package com.chrisspace.fancymall.product.service.impl;
 
 import com.chrisspace.fancymall.common.utils.Query;
+import com.chrisspace.fancymall.product.service.CategoryBrandRelationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,10 +19,14 @@ import com.chrisspace.fancymall.common.utils.PageUtils;
 import com.chrisspace.fancymall.product.dao.CategoryDao;
 import com.chrisspace.fancymall.product.entity.CategoryEntity;
 import com.chrisspace.fancymall.product.service.CategoryService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Autowired
+    CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -55,6 +63,42 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
         // 给bean上加上逻辑删除注解
         baseMapper.deleteBatchIds(catIds);
+
+    }
+
+    @Override
+    public Long[] findCateLogPath(Long catelogId) {
+
+        ArrayList<Long> paths = new ArrayList<>();
+
+        List<Long> parentPath = findParentPath(catelogId, paths);
+        Collections.reverse(parentPath);
+
+        return parentPath.toArray(new Long[parentPath.size()]);
+    }
+
+    @Override
+    @Transactional
+    public void updateCasacade(CategoryEntity category) {
+        this.updateById(category);
+
+        categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
+
+    }
+
+    /**
+     * 递归调用方法
+     * @param catelogId
+     * @param paths
+     * @return
+     */
+    private List<Long> findParentPath(Long catelogId, List<Long> paths){
+        paths.add(catelogId);
+        CategoryEntity info = this.getById(catelogId);
+        if (info.getParentCid() != 0){
+            findParentPath(info.getParentCid(),paths);
+        }
+        return paths;
 
     }
 

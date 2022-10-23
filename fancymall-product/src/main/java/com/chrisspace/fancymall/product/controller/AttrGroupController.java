@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.chrisspace.fancymall.common.utils.PageUtils;
 import com.chrisspace.fancymall.common.utils.R;
+import com.chrisspace.fancymall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +32,9 @@ public class AttrGroupController {
     @Autowired
     private AttrGroupService attrGroupService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     /**
      * 列表
      */
@@ -50,6 +54,11 @@ public class AttrGroupController {
    // //@RequiresPermissions("product:attrgroup:info")
     public R info(@PathVariable("attrGroupId") Long attrGroupId){
 		AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
+
+        // 增加返回路径字段
+        Long catelogId = attrGroup.getCatelogId();
+        Long[] path = categoryService.findCateLogPath(catelogId);
+        attrGroup.setCatelogPath(path);
 
         return R.ok().put("attrGroup", attrGroup);
     }

@@ -1,6 +1,7 @@
 package com.chrisspace.fancymall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -37,9 +38,24 @@ public class CategoryBrandRelationController {
     @RequestMapping("/list")
     // //@RequiresPermissions("product:categorybrandrelation:list")
     public R list(@RequestParam Map<String, Object> params){
+
+
         PageUtils page = categoryBrandRelationService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 查询品牌和分类关系
+     */
+    @RequestMapping("/catelog/list")
+    // //@RequiresPermissions("product:categorybrandrelation:list")
+    public R cateloglist(@RequestParam Map<String, Object> params){
+
+
+        List<CategoryBrandRelationEntity> list = categoryBrandRelationService.queryCatelogListPage(params);
+
+        return R.ok().put("data", list);
     }
 
 
@@ -56,11 +72,14 @@ public class CategoryBrandRelationController {
 
     /**
      * 保存
+     * 每个Entity对应一张表的一行
      */
     @RequestMapping("/save")
     // //@RequiresPermissions("product:categorybrandrelation:save")
     public R save(@RequestBody CategoryBrandRelationEntity categoryBrandRelation){
-		categoryBrandRelationService.save(categoryBrandRelation);
+		categoryBrandRelationService.saveDetail(categoryBrandRelation);
+
+        // insert into t_relation () values ()
 
         return R.ok();
     }
