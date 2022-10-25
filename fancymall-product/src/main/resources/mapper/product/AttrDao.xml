@@ -15,6 +15,14 @@
         <result property="catelogId" column="catelog_id"/>
         <result property="showDesc" column="show_desc"/>
     </resultMap>
+    <select id="queryAttrsByIds" resultMap="attrMap">
+
+        select * from pms_attr where attr_id in
+        <foreach collection="list" index="index" close=")" open="(" item="attrId" separator=",">
+            #{attrId}
+        </foreach>
+
+    </select>
 
 
 </mapper>

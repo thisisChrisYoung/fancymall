@@ -15,14 +15,27 @@
         WHERE attr_id = #{attrId}
 
     </update>
+    <delete id="deleteByAttrIdAndGroupId">
+        delete from pms_attr_attrgroup_relation where
+        <foreach collection="entities" item="item" separator=" OR ">
+            (attr_id = #{item.attrId} and attr_group_id = #{item.attrGroupId})
+        </foreach>
+    </delete>
 
     <select id="queryAttrGroupIdByAttrId" resultType="java.lang.Long">
         SELECT attr_group_id FROM pms_attr_attrgroup_relation WHERE
         attr_id = #{attrId}
     </select>
+
     <select id="countGroupId" resultType="java.lang.Integer">
         SELECT count(1) FROM pms_attr_attrgroup_relation WHERE
         attt_id = #{attrId}
+    </select>
+
+    <select id="queryAttrIdsByGroupId" resultType="java.lang.Long">
+
+        select attr_id from pms_attr_attrgroup_relation where
+        attr_group_id = #{attrGroupId}
     </select>
 
 

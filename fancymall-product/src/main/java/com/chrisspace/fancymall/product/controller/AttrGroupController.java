@@ -1,17 +1,23 @@
 package com.chrisspace.fancymall.product.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.alibaba.nacos.shaded.org.checkerframework.checker.units.qual.A;
 import com.chrisspace.fancymall.common.utils.PageUtils;
 import com.chrisspace.fancymall.common.utils.R;
+import com.chrisspace.fancymall.product.dao.AttrAttrgroupRelationDao;
+import com.chrisspace.fancymall.product.dao.AttrDao;
+import com.chrisspace.fancymall.product.entity.AttrAttrgroupRelationEntity;
+import com.chrisspace.fancymall.product.entity.AttrEntity;
 import com.chrisspace.fancymall.product.service.CategoryService;
+import com.chrisspace.fancymall.product.vo.AttrRespVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.chrisspace.fancymall.product.entity.AttrGroupEntity;
 import com.chrisspace.fancymall.product.service.AttrGroupService;
@@ -34,6 +40,12 @@ public class AttrGroupController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private AttrAttrgroupRelationDao relationDao;
+
+    @Autowired
+    private AttrDao attrDao;
 
     /**
      * 列表
@@ -95,5 +107,49 @@ public class AttrGroupController {
 
         return R.ok();
     }
+
+    // /product/attrgroup/{attrgroupId}/attr/relation
+
+    /**
+     * 分组对应属性
+     */
+    @RequestMapping("/{attrgroupId}/attr/relation")
+    public R queryAttrsByGroupId(@PathVariable("attrgroupId") Long attrGroupId){
+
+        List<Long> attrIds = relationDao.queryAttrIdsByGroupId(attrGroupId);
+        if (attrIds.size() > 0){
+            List<AttrEntity> attrEntities = attrDao.queryAttrsByIds(attrIds);
+            return R.ok().put("data",attrEntities);
+        }else return R.ok().put("data",new ArrayList<>());
+
+    }
+
+    /**
+     * 删除
+     */
+    @PostMapping("/attr/relation/delete")
+    // //@RequiresPermissions("product:attrgroup:delete")
+    public R delete(@RequestBody List<AttrRespVo> list){
+
+        List<AttrAttrgroupRelationEntity> relationEntityList = list.stream().map(
+                (item) -> {
+                    AttrAttrgroupRelationEntity attrAttrgroupRelationEntity = new AttrAttrgroupRelationEntity();
+                    BeanUtils.copyProperties(item, attrAttrgroupRelationEntity);
+                    return attrAttrgroupRelationEntity;
+                }
+        ).collect(Collectors.toList());
+
+
+        if (relationEntityList.size() > 0 ){
+
+            int i = relationDao.deleteByAttrIdAndGroupId(relationEntityList);
+            if (i > 0) return R.ok("success");
+            else return R.error();
+        }else
+            return R.error();
+    }
+
+    // /product/attrgroup/attr/relation/delete
+
 
 }

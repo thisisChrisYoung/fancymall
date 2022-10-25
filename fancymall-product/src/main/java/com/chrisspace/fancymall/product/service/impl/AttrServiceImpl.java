@@ -1,6 +1,7 @@
 package com.chrisspace.fancymall.product.service.impl;
 
 import com.alibaba.nacos.shaded.org.checkerframework.checker.units.qual.A;
+import com.chrisspace.fancymall.common.constant.ProductConstant;
 import com.chrisspace.fancymall.product.dao.AttrAttrgroupRelationDao;
 import com.chrisspace.fancymall.product.dao.AttrGroupDao;
 import com.chrisspace.fancymall.product.dao.CategoryDao;
@@ -69,19 +70,23 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         // 保存基本数据
         this.save(attrEntity);
         // 保存关联关系
-        AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
-        relationEntity.setAttrGroupId(attr.getAttrGroupId());
-        relationEntity.setAttrId(attrEntity.getAttrId());
-        relationDao.insert(relationEntity);
+        if (attr.getAttrType() == ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()){
+            AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
+            relationEntity.setAttrGroupId(attr.getAttrGroupId());
+            relationEntity.setAttrId(attrEntity.getAttrId());
+            relationDao.insert(relationEntity);
+        }
+
 
     }
 
     @Override
-    public PageUtils queryBaseAttrPage(Map<String, Object> param, Long catelogId) {
+    public PageUtils queryBaseAttrPage(Map<String, Object> param, Long catelogId, String attrType) {
 
-        QueryWrapper<AttrEntity> wrapper = new QueryWrapper<>();
+        QueryWrapper<AttrEntity> wrapper = new QueryWrapper<AttrEntity>().eq("attr_type","base".equalsIgnoreCase(attrType) ? ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode() : ProductConstant.AttrEnum.ATTR_TYPE_SALE.getCode());
 
 //        attrGroupDao.selectById();
+
 
         if (catelogId != 0){
             wrapper.eq("catelog_id",catelogId);
@@ -141,12 +146,16 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         AttrEntity attrEntity = this.getById(attrId);
         BeanUtils.copyProperties(attrEntity, attrRespVo);
 
-        // catePath   attrGroupId
         Long catelogId = attrRespVo.getCatelogId();
-        Long[] cateLogPath = categoryService.findCateLogPath(catelogId);
-        if (cateLogPath != null){
-            attrRespVo.setCatelogPath(cateLogPath);
+        // catePath   attrGroupId
+        if (attrEntity.getAttrType() == ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()){
+
+            Long[] cateLogPath = categoryService.findCateLogPath(catelogId);
+            if (cateLogPath != null){
+                attrRespVo.setCatelogPath(cateLogPath);
+            }
         }
+
 
         Long groupId = relationDao.queryAttrGroupIdByAttrId(attrId);
         AttrGroupEntity attrGroupEntity = attrGroupDao.selectById(groupId);
@@ -176,17 +185,20 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         BeanUtils.copyProperties(attr, attrEntity);
         this.updateById(attrEntity);
 
-        int groupCount = relationDao.countGroupId(attr.getAttrId());
-        if (groupCount > 0){
-            // 附加信息修改
-            relationDao.updateGroupIdByAttrId(attr.getAttrId(), attr.getAttrGroupId());
-        }else {
-            AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
-            relationEntity.setAttrGroupId(attr.getAttrGroupId());
-            relationEntity.setAttrId(attr.getAttrId());
+        if (attrEntity.getAttrType() == ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()){
+            int groupCount = relationDao.countGroupId(attr.getAttrId());
+            if (groupCount > 0){
+                // 附加信息修改
+                relationDao.updateGroupIdByAttrId(attr.getAttrId(), attr.getAttrGroupId());
+            }else {
+                AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
+                relationEntity.setAttrGroupId(attr.getAttrGroupId());
+                relationEntity.setAttrId(attr.getAttrId());
 
-            relationDao.insert(relationEntity);
+                relationDao.insert(relationEntity);
+            }
         }
+
 
 
 

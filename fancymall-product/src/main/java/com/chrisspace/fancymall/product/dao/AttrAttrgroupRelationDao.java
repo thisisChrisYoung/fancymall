@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * 属性&属性分组关联
  * 
@@ -20,4 +22,8 @@ public interface AttrAttrgroupRelationDao extends BaseMapper<AttrAttrgroupRelati
     void updateGroupIdByAttrId(@Param("attrId") Long attrId, @Param("attrGroupId") Long attrGroupId);
 
     int countGroupId(@Param("attrId")Long attrId);
+
+    List<Long> queryAttrIdsByGroupId(@Param("attrGroupId") Long attrGroupId);
+
+    int deleteByAttrIdAndGroupId(@Param("entities") List<AttrAttrgroupRelationEntity> list);
 }
