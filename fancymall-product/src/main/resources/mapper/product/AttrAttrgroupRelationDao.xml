@@ -38,5 +38,16 @@
         attr_group_id = #{attrGroupId}
     </select>
 
+    <select id="queryAttrsNotRelateByGroupId" resultType="java.lang.Long">
+        select attr_id from pms_attr_attrgroup_relation where
+        catelog_id = #{catelogId} and
+        attr_group_id not in
+        <foreach collection="attrGroupIds" separator="," item="item" open="(" close=")" index="index">
+            #{item}
+        </foreach>
+
+
+    </select>
+
 
 </mapper>

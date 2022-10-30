@@ -26,4 +26,6 @@ public interface AttrAttrgroupRelationDao extends BaseMapper<AttrAttrgroupRelati
     List<Long> queryAttrIdsByGroupId(@Param("attrGroupId") Long attrGroupId);
 
     int deleteByAttrIdAndGroupId(@Param("entities") List<AttrAttrgroupRelationEntity> list);
+
+    List<Long> queryAttrsNotRelateByGroupId(@Param("catelogId")Long catelogId, @Param("attrGroupIds") List<Long> attrGroupIds);
 }

@@ -23,8 +23,6 @@ import com.chrisspace.fancymall.product.entity.AttrGroupEntity;
 import com.chrisspace.fancymall.product.service.AttrGroupService;
 
 
-
-
 /**
  * 属性分组
  *
@@ -52,7 +50,7 @@ public class AttrGroupController {
      */
     @RequestMapping("/list/{catelogId}")
     // //@RequiresPermissions("product:attrgroup:list")
-    public R list(@RequestParam Map<String, Object> params,@PathVariable Long catelogId){
+    public R list(@RequestParam Map<String, Object> params, @PathVariable Long catelogId) {
         PageUtils page = attrGroupService.queryPage(params, catelogId);
 
         return R.ok().put("page", page);
@@ -63,9 +61,9 @@ public class AttrGroupController {
      * 信息
      */
     @RequestMapping("/info/{attrGroupId}")
-   // //@RequiresPermissions("product:attrgroup:info")
-    public R info(@PathVariable("attrGroupId") Long attrGroupId){
-		AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
+    // //@RequiresPermissions("product:attrgroup:info")
+    public R info(@PathVariable("attrGroupId") Long attrGroupId) {
+        AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
 
         // 增加返回路径字段
         Long catelogId = attrGroup.getCatelogId();
@@ -80,8 +78,8 @@ public class AttrGroupController {
      */
     @RequestMapping("/save")
     // //@RequiresPermissions("product:attrgroup:save")
-    public R save(@RequestBody AttrGroupEntity attrGroup){
-		attrGroupService.save(attrGroup);
+    public R save(@RequestBody AttrGroupEntity attrGroup) {
+        attrGroupService.save(attrGroup);
 
         return R.ok();
     }
@@ -91,8 +89,8 @@ public class AttrGroupController {
      */
     @RequestMapping("/update")
     // //@RequiresPermissions("product:attrgroup:update")
-    public R update(@RequestBody AttrGroupEntity attrGroup){
-		attrGroupService.updateById(attrGroup);
+    public R update(@RequestBody AttrGroupEntity attrGroup) {
+        attrGroupService.updateById(attrGroup);
 
         return R.ok();
     }
@@ -102,8 +100,8 @@ public class AttrGroupController {
      */
     @RequestMapping("/delete")
     // //@RequiresPermissions("product:attrgroup:delete")
-    public R delete(@RequestBody Long[] attrGroupIds){
-		attrGroupService.removeByIds(Arrays.asList(attrGroupIds));
+    public R delete(@RequestBody Long[] attrGroupIds) {
+        attrGroupService.removeByIds(Arrays.asList(attrGroupIds));
 
         return R.ok();
     }
@@ -114,13 +112,26 @@ public class AttrGroupController {
      * 分组对应属性
      */
     @RequestMapping("/{attrgroupId}/attr/relation")
-    public R queryAttrsByGroupId(@PathVariable("attrgroupId") Long attrGroupId){
+    public R queryAttrsByGroupId(@PathVariable("attrgroupId") Long attrGroupId) {
 
         List<Long> attrIds = relationDao.queryAttrIdsByGroupId(attrGroupId);
-        if (attrIds.size() > 0){
+        if (attrIds.size() > 0) {
             List<AttrEntity> attrEntities = attrDao.queryAttrsByIds(attrIds);
-            return R.ok().put("data",attrEntities);
-        }else return R.ok().put("data",new ArrayList<>());
+            return R.ok().put("data", attrEntities);
+        } else return R.ok().put("data", new ArrayList<>());
+
+    }
+
+    /**
+     * 分组没有关联的属性
+     */
+    @RequestMapping("/{attrgroupId}/noattr/relation")
+    public R queryAttrsNotRelateByGroupId(@PathVariable("attrgroupId") Long attrGroupId,
+                                          @RequestParam Map<String, Object> params) {
+
+        PageUtils page = attrGroupService.queryAttrsNotRelateByGroupId(attrGroupId, params);
+
+        return R.ok().put("page",page);
 
     }
 
@@ -129,7 +140,7 @@ public class AttrGroupController {
      */
     @PostMapping("/attr/relation/delete")
     // //@RequiresPermissions("product:attrgroup:delete")
-    public R delete(@RequestBody List<AttrRespVo> list){
+    public R delete(@RequestBody List<AttrRespVo> list) {
 
         List<AttrAttrgroupRelationEntity> relationEntityList = list.stream().map(
                 (item) -> {
@@ -140,16 +151,17 @@ public class AttrGroupController {
         ).collect(Collectors.toList());
 
 
-        if (relationEntityList.size() > 0 ){
+        if (relationEntityList.size() > 0) {
 
             int i = relationDao.deleteByAttrIdAndGroupId(relationEntityList);
             if (i > 0) return R.ok("success");
             else return R.error();
-        }else
+        } else
             return R.error();
     }
 
     // /product/attrgroup/attr/relation/delete
+    // /attrgroup/1/noattr/relation  /product/attrgroup/{attrgroupId}/noattr/relation
 
 
 }

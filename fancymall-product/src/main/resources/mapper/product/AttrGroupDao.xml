@@ -12,7 +12,9 @@
         <result property="icon" column="icon"/>
         <result property="catelogId" column="catelog_id"/>
     </resultMap>
-
+    <select id="selectByCateLogId" resultType="com.chrisspace.fancymall.product.entity.AttrGroupEntity">
+        select * from pms_attr_group where catelog_id = #{catelogId}
+    </select>
 
 
 </mapper>
